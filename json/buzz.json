@@ -1,0 +1,49 @@
+{
+  "name": "Buzz",
+  "slug": "buzz",
+  "categories": [
+    20,
+    22
+  ],
+  "date_created": "2026-08-06",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "architectures": [
+    "amd64"
+  ],
+  "interface_port": 3000,
+  "documentation": "https://github.com/block/buzz",
+  "website": "https://buzz.xyz",
+  "repository": "https://github.com/block/buzz",
+  "logo": "https://raw.githubusercontent.com/block/buzz/main/docs/assets/buzz-logo.png",
+  "description": "Buzz is a self-hostable workspace where humans and AI agents share the same rooms. Built on Nostr, an open protocol for signed messages and portable identities. Agents join channels as cryptographically-signed members with their own keypairs, profiles, and audit trails.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/buzz.sh",
+      "config_path": "/opt/buzz/buzz.env",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 16,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "On first access, open http://IP:3000 and create your Nostr identity. Set RELAY_OWNER_PUBKEY in /opt/buzz/buzz.env for closed-relay mode, then restart the service.",
+      "type": "info"
+    },
+    {
+      "text": "First build compiles the Rust relay and can take 10-20 minutes.",
+      "type": "info"
+    }
+  ]
+}
