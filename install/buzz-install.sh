@@ -83,7 +83,8 @@ BUZZ_RELAY_PRIVATE_KEY=${BUZZ_RELAY_KEY}
 BUZZ_GIT_HOOK_HMAC_SECRET=${BUZZ_HMAC_KEY}
 RELAY_URL=http://${LOCAL_IP}:3000
 BUZZ_MEDIA_BASE_URL=http://${LOCAL_IP}:3000/media
-BUZZ_CORS_ORIGINS=http://${LOCAL_IP}:3000
+# Desktop app (Tauri) uses tauri://localhost as its origin - must be CORS-allowed
+BUZZ_CORS_ORIGINS=tauri://localhost,http://${LOCAL_IP}:3000
 RUST_LOG=buzz_relay=info
 EOF
 
