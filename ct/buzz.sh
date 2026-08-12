@@ -41,12 +41,13 @@ function update_script() {
     msg_ok "Stopped Services"
 
     msg_info "Backing up data"
-    create_backup /opt/buzz/.env
+    create_backup /opt/buzz/buzz.env
     msg_ok "Backed up data"
 
     msg_info "Updating ${APP}"
     cd /opt/buzz
     $STD git pull --ff-only
+    setup_rust
     $STD cargo build --release -p buzz-relay
     msg_ok "Updated ${APP}"
 
@@ -66,7 +67,7 @@ start
 build_container
 description
 
-msg_ok "Completed successfully!\n"
+msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

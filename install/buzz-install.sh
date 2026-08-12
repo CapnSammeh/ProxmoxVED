@@ -23,23 +23,19 @@ PG_DB_NAME="buzz" PG_DB_USER="buzz" setup_postgresql_db
 msg_ok "Set up PostgreSQL"
 
 msg_info "Setting up MinIO"
-mkdir -p /opt/minio
-curl_with_retry -o /opt/minio/minio "https://dl.min.io/server/minio/release/linux-amd64/minio"
-chmod +x /opt/minio/minio
+curl_with_retry -o /usr/local/bin/minio "https://dl.min.io/server/minio/release/linux-amd64/minio"
+chmod +x /usr/local/bin/minio
 mkdir -p /opt/minio/data
 cat <<EOF >/etc/systemd/system/minio.service
 [Unit]
-Description=MinIO
-Documentation=https://min.io/docs
-Wants=network-online.target
-After=network-online.target
+Description=MinIO Object Storage
+After=network.target
 
 [Service]
-WorkingDirectory=/opt/minio
-ExecStart=/opt/minio/minio server /opt/minio/data --address ":9000" --console-address ":9001"
-EnvironmentFile=/opt/minio/minio.env
+ExecStart=/usr/local/bin/minio server /opt/minio/data --address ":9000" --console-address ":9001"
+EnvironmentFile=/etc/default/minio
 Restart=always
-LimitNOFILE=65536
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -88,9 +84,11 @@ RUST_LOG=buzz_relay=info
 EOF
 
 # Write MinIO creds with the generated secrets, then start it
-cat <<EOF >/opt/minio/minio.env
+cat <<EOF >/etc/default/minio
 MINIO_ROOT_USER=${MINIO_AK}
 MINIO_ROOT_PASSWORD=${MINIO_SK}
+MINIO_VOLUMES=/opt/minio/data
+MINIO_OPTS="--address :9000 --console-address :9001"
 EOF
 systemctl enable -q --now minio
 
