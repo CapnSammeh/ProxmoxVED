@@ -10,8 +10,6 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 # Source: https://github.com/block/buzz
 
 APP="Buzz"
-NSAPP="buzz"
-var_install="${NSAPP}-install"
 var_tags="${var_tags:-ai;messaging}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
