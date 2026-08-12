@@ -101,10 +101,10 @@ for i in $(seq 1 15); do
   curl -fsS "http://127.0.0.1:9000/minio/health/live" >/dev/null 2>&1 && break
   sleep 1
 done
-$STD curl -fsSL "https://dl.min.io/client/mc/release/linux-amd64/mc" -o /usr/local/bin/mc
-chmod +x /usr/local/bin/mc
-$STD mc alias set buzzlocal "http://127.0.0.1:9000" "${MINIO_AK}" "${MINIO_SK}"
-$STD mc mb buzzlocal/buzz-media
+$STD curl -fsSL "https://dl.min.io/client/mc/release/linux-amd64/mc" -o /usr/local/bin/mcli
+chmod +x /usr/local/bin/mcli
+$STD /usr/local/bin/mcli alias set buzzlocal "http://127.0.0.1:9000" "${MINIO_AK}" "${MINIO_SK}"
+$STD /usr/local/bin/mcli mb buzzlocal/buzz-media
 msg_ok "Created MinIO bucket buzz-media"
 
 # Set Redis password (Redis is started as dependency service)
