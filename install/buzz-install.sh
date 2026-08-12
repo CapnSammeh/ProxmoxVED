@@ -23,7 +23,10 @@ PG_DB_NAME="buzz" PG_DB_USER="buzz" setup_postgresql_db
 msg_ok "Set up PostgreSQL"
 
 msg_info "Setting up MinIO"
-curl_with_retry -o /usr/local/bin/minio "https://dl.min.io/server/minio/release/linux-amd64/minio"
+if ! $STD curl -fsSL "https://dl.min.io/server/minio/release/linux-amd64/minio" -o /usr/local/bin/minio; then
+  msg_warn "dl.min.io failed, trying GitHub releases mirror"
+  $STD curl -fsSL "https://github.com/minio/minio/releases/latest/download/minio-linux-amd64" -o /usr/local/bin/minio
+fi
 chmod +x /usr/local/bin/minio
 mkdir -p /opt/minio/data
 cat <<EOF >/etc/systemd/system/minio.service
