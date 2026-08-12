@@ -96,6 +96,17 @@ MINIO_OPTS="--address :9000 --console-address :9001"
 EOF
 systemctl enable -q --now minio
 
+# Wait for MinIO to be ready, then create the buzz-media bucket (required by relay A3 gate)
+for i in $(seq 1 15); do
+  curl -fsS "http://127.0.0.1:9000/minio/health/live" >/dev/null 2>&1 && break
+  sleep 1
+done
+$STD curl -fsSL "https://dl.min.io/client/mc/release/linux-amd64/mc" -o /usr/local/bin/mc
+chmod +x /usr/local/bin/mc
+$STD mc alias set buzzlocal "http://127.0.0.1:9000" "${MINIO_AK}" "${MINIO_SK}"
+$STD mc mb buzzlocal/buzz-media
+msg_ok "Created MinIO bucket buzz-media"
+
 # Set Redis password (Redis is started as dependency service)
 if grep -q "^# requirepass" /etc/redis/redis.conf; then
   sed -i "s|^# requirepass.*|requirepass ${REDIS_PW}|" /etc/redis/redis.conf
