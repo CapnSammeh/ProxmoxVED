@@ -23,9 +23,10 @@ PG_DB_NAME="buzz" PG_DB_USER="buzz" setup_postgresql_db
 msg_ok "Set up PostgreSQL"
 
 msg_info "Setting up MinIO"
-if ! $STD curl -fsSL "https://dl.min.io/server/minio/release/linux-amd64/minio" -o /usr/local/bin/minio; then
-  msg_warn "dl.min.io failed, trying GitHub releases mirror"
-  $STD curl -fsSL "https://github.com/minio/minio/releases/latest/download/minio-linux-amd64" -o /usr/local/bin/minio
+# dl.min.io has no IPv6 records; force IPv4 (container may have broken IPv6 state)
+if ! $STD curl -4 -fsSL "https://dl.min.io/server/minio/release/linux-amd64/minio" -o /usr/local/bin/minio; then
+  msg_warn "dl.min.io failed, retrying"
+  $STD curl -4 -fsSL --retry 3 --retry-delay 2 "https://dl.min.io/server/minio/release/linux-amd64/minio" -o /usr/local/bin/minio
 fi
 chmod +x /usr/local/bin/minio
 mkdir -p /opt/minio/data
